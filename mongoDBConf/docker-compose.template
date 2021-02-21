@@ -1,0 +1,20 @@
+version: '3'
+services:
+    mongoexporter{MONITOR_SUFFIX}:
+        image: mongoexporter
+        container_name: mongoexp{MONITOR_SUFFIX}
+        user: "{CURRENT_UID}:{CURRENT_GID}"
+        volumes:
+            - {REPO_PATH}/{MONITOR_SUFFIX}/MongoExporterConf/:/MongoExporterConf/
+            - {REPO_PATH}/{MONITOR_SUFFIX}/MongoExporterLog/:/MongoExporterLog/
+    prom{MONITOR_SUFFIX}:
+        image: prom/prometheus
+        container_name: prom{MONITOR_SUFFIX}
+        user: "{CURRENT_UID}:{CURRENT_GID}"
+        ports:
+          - {PROMETHEUS_PORT}:9090
+        volumes:
+            - {REPO_PATH}/{MONITOR_SUFFIX}/PrometheusConf:/etc/prometheus
+            - {REPO_PATH}/{MONITOR_SUFFIX}/PrometheusData:/prometheus
+        external_links:
+            - mongoexporter{MONITOR_SUFFIX}:{HOST}

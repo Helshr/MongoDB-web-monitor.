@@ -1,0 +1,15 @@
+[basic]
+prometheusPort=13500
+exporterPort=30000
+monitorSuffix=_rs
+mongoExporterHostName=mongoexporter
+
+[mongo]
+# Router
+uri=router01&mongodb://192.168.3.100:37117/admin
+# Config
+uri=configsvr01&mongodb://192.168.3.100:37119/admin
+# Shard
+uri=shard01-a&mongodb://192.168.3.100:37122/admin
+uri=shard01-b&mongodb://192.168.3.100:37123/admin
+uri=shard01-c&mongodb://192.168.3.100:37125/admin

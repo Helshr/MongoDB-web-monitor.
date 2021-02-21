@@ -1,0 +1,42 @@
+global: {evaluation_interval: 15s, scrape_interval: 15s}
+scrape_configs:
+- job_name: router01
+  relabel_configs:
+  - regex: .*
+    replacement: router01
+    source_labels: [__address__]
+    target_label: instance
+  static_configs:
+  - targets: ['mongoexporter:30000']
+- job_name: configsvr01
+  relabel_configs:
+  - regex: .*
+    replacement: configsvr01
+    source_labels: [__address__]
+    target_label: instance
+  static_configs:
+  - targets: ['mongoexporter:30001']
+- job_name: shard01-a
+  relabel_configs:
+  - regex: .*
+    replacement: shard01-a
+    source_labels: [__address__]
+    target_label: instance
+  static_configs:
+  - targets: ['mongoexporter:30002']
+- job_name: shard01-b
+  relabel_configs:
+  - regex: .*
+    replacement: shard01-b
+    source_labels: [__address__]
+    target_label: instance
+  static_configs:
+  - targets: ['mongoexporter:30003']
+- job_name: shard01-c
+  relabel_configs:
+  - regex: .*
+    replacement: shard01-c
+    source_labels: [__address__]
+    target_label: instance
+  static_configs:
+  - targets: ['mongoexporter:30004']

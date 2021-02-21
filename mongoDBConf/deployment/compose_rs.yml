@@ -1,0 +1,20 @@
+version: '3'
+services:
+    mongoexporter_rs:
+        image: mongoexporter
+        container_name: mongoexp_rs
+        user: "501:20"
+        volumes:
+            - ./_rs/MongoExporterConf/:/MongoExporterConf/
+            - ./_rs/MongoExporterLog/:/MongoExporterLog/
+    prom_rs:
+        image: prom/prometheus
+        container_name: prom_rs
+        user: "501:20"
+        ports:
+          - 13500:9090
+        volumes:
+            - ./_rs/PrometheusConf:/etc/prometheus
+            - ./_rs/PrometheusData:/prometheus
+        external_links:
+            - mongoexporter_rs:mongoexporter
