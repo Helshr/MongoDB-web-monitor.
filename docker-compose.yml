@@ -1,0 +1,59 @@
+version: '2'
+services:
+
+ ## Shards
+  shard01-a:
+    image: mongo:4.4.4
+    container_name: shard-01-node-a
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-01 --bind_ip 0.0.0.0
+    volumes:
+      - ./scripts:/scripts
+    ports:
+      - 37122:27017
+    #environment:
+      #MONGO_INITDB_ROOT_USERNAME: root
+      #MONGO_INITDB_ROOT_PASSWORD: 123456
+  shard01-b:
+    image: mongo:4.4.4
+    container_name: shard-01-node-b
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-01 --bind_ip 0.0.0.0
+    volumes:
+      - ./scripts:/scripts
+    ports:
+      - 37123:27017
+    depends_on:
+      - shard01-a
+  shard01-c:
+    image: mongo:4.4.4
+    container_name: shard-01-node-c
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-01 --bind_ip 0.0.0.0
+    volumes:
+      - ./scripts:/scripts
+    ports:
+      - 37125:27017
+    depends_on:
+      - shard01-b
+
+  # Router Server
+  router01:
+    image: mongo:4.4.4
+    container_name: router-01
+    command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017 --bind_ip 0.0.0.0
+    ports:
+      - 37117:27017
+    volumes:
+      - ./scripts:/scripts
+    depends_on:
+      - shard01-c
+  
+  # Config Servers
+  configsvr01:
+    image: mongo:4.4.4
+    container_name: mongo-config-01 
+    command: mongod --port 27017 --configsvr --replSet rs-config-server --bind_ip 0.0.0.0
+    volumes:
+      - ./scripts:/scripts 
+    ports:
+      - 37119:27017
+    depends_on:
+      - router01
